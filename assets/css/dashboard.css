@@ -1,0 +1,42 @@
+.container {
+    max-width: 800px;
+    margin: 120px auto 40px;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-white);
+}
+
+.container h1, .container h2, .container h3 {
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+    font-family: 'Playfair Display', serif;
+}
+
+.container p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.container ul {
+    list-style: none;
+    padding: 0;
+}
+
+.container li {
+    margin-bottom: 1rem;
+}
+
+.container a {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.container a:hover {
+    color: var(--color-white);
+} 

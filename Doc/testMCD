@@ -1,0 +1,63 @@
+[CLIENT]
+- id_client (PK)
+- civilite
+- nom
+- prenom
+- email
+- mot_de_passe
+- date_naissance
+- adresse
+- telephone
+
+[PRODUIT]
+- id_produit (PK)
+- nom
+- description
+- prix
+- stock
+- disponibilite
+- id_collection (FK)
+- id_materiau (FK)
+
+[COLLECTION]
+- id_collection (PK)
+- nom
+- description
+
+[MATERIAU]
+- id_materiau (PK)
+- nom
+- description
+
+[COMMANDE]
+- id_commande (PK)
+- date_commande
+- statut
+- total
+- id_client (FK)
+
+[DETAIL_COMMANDE]
+- id_detail (PK)
+- id_commande (FK)
+- id_produit (FK)
+- quantite
+- prix_unitaire
+
+[CATEGORIE]
+- id_categorie (PK)
+- nom
+- description
+
+[PRODUIT_CATEGORIE]
+- id_produit (FK)
+- id_categorie (FK)
+
+
+
+Un CLIENT peut passer plusieurs COMMANDES (1,n)
+Une COMMANDE appartient à un seul CLIENT (1,1)
+Une COMMANDE contient plusieurs DETAIL_COMMANDE (1,n)
+Un DETAIL_COMMANDE concerne un seul PRODUIT (1,1)
+Un PRODUIT peut appartenir à plusieurs CATEGORIES (n,n)
+Un PRODUIT appartient à une COLLECTION (1,1)
+Un PRODUIT est fabriqué avec un MATERIAU (1,1)

@@ -1,0 +1,93 @@
+.commandes-list {
+    margin: 2rem 0;
+}
+
+.commande-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+}
+
+.commande-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.commande-numero {
+    font-weight: bold;
+    color: #333;
+}
+
+.commande-date {
+    color: #666;
+}
+
+.commande-statut {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.statut-livree {
+    background: #e3fcef;
+    color: #00a854;
+}
+
+.statut-en-cours {
+    background: #fff7e6;
+    color: #fa8c16;
+}
+
+.statut-en-preparation {
+    background: #e6f7ff;
+    color: #1890ff;
+}
+
+.commande-produits {
+    margin: 1rem 0;
+}
+
+.produit-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.produit-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 1rem;
+}
+
+.produit-details {
+    flex-grow: 1;
+}
+
+.produit-nom {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.produit-prix {
+    color: #666;
+}
+
+.commande-total {
+    text-align: right;
+    font-weight: bold;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.actions {
+    margin-top: 2rem;
+} 

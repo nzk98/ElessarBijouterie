@@ -1,0 +1,245 @@
+/* Styles pour le carrousel */
+.carousel {
+    position: relative;
+    width: 100vw;
+    max-width: 100vw;
+    overflow: hidden;
+    margin: 0;
+    background: transparent;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-container {
+    position: relative;
+    width: 100vw;
+    max-width: 100vw;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-item {
+    width: 100vw;
+    display: none;
+    padding: 0;
+    background: transparent;
+    justify-content: center;
+    align-items: center;
+}
+
+.carousel-item.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-image {
+    max-width: 500px;
+    max-height: 70vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    box-shadow: none;
+    background: transparent;
+    display: block;
+}
+
+.carousel-navigation {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    z-index: 10;
+    padding: 0;
+    background: none;
+}
+
+.carousel-control {
+    background: rgba(255, 255, 255, 0.8);
+    color: #333;
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-control:hover {
+    background: white;
+    color: var(--color-accent);
+    text-decoration: none;
+    transform: scale(1.1);
+}
+
+.carousel-indicators {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.carousel-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: 2px solid white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.carousel-indicator:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.2);
+}
+
+.carousel-indicator.active {
+    background: white;
+    transform: scale(1.2);
+}
+
+.no-images {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #666;
+    font-size: 1.2rem;
+}
+
+/* Styles pour la section des articles en vedette */
+.featured-posts {
+    padding: 2rem;
+}
+
+.featured-posts h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--color-accent);
+}
+
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 0 1rem;
+}
+
+@media (max-width: 1200px) {
+    .posts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .posts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.post-card {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+}
+
+.post-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.post-content {
+    padding: 1rem;
+}
+
+.post-content h3 {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+    color: var(--color-white);
+    font-family: 'Playfair Display', serif;
+}
+
+.post-content p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 0.8rem;
+    color: var(--color-white);
+    opacity: 0.8;
+}
+
+.read-more {
+    font-size: 0.8rem;
+    color: var(--color-white);
+    text-decoration: none;
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--color-white);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.read-more:hover {
+    background: var(--color-accent);
+    color: var(--color-white);
+}
+
+.post-category {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+    text-transform: capitalize;
+}
+
+.post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    font-size: 0.8rem;
+    color: var(--color-white);
+    opacity: 0.7;
+}
+
+.post-date {
+    font-style: italic;
+}
+
+h2{
+    color: var(--color-white);
+}
+
+.no-articles {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-white);
+    font-size: 1.1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
