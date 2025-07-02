@@ -71,7 +71,9 @@ ElessardBijouterie est une application web de gestion et de présentation pour u
 
 ## Licence
 
-- À définir (MIT, GPL, etc.)
+Ce projet est propriétaire.  
+Tous droits réservés.  
+Aucune utilisation, copie, modification ou distribution n'est autorisée sans l'accord explicite de l'auteur.
 
 ## Contact
 
