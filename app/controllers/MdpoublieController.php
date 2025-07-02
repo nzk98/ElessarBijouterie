@@ -1,102 +1,109 @@
 <?php
-session_start();
-class MdpoublieController extends Utilisateur{
-    private array $successMessage = [];
-    private array $errorsMessage = [];
- 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+require_once __DIR__ . '/../models/Utilisateur.php';
+
+class MdpoublieController {
+    private array $errors = [];
+    private array $success = [];
+  
+
     public function index() {
-        $this->messageMDP();
-
-        $errorsMessage = $this->getErrorMessage();
-        $successMessage = $this->getSuccessMessage();
-        
-        $metaDesc = "Entrez votre mail et recevez un mail pour reccupérer votre mot de passe";
-        $pageTitle = "CCI Formation 18 - Modification de mot de passe";
         $pageStyle = "auth.css";
-        $jsFile = "mdpoublie.js";
+        $jsFile = ["auth.js", "main.js"];
+        $showResetForm = false;
+        $token = $_GET['token'] ?? null;
+        $email = '';
 
-        //Inclusion du header commun
+        // 1. Demande de réinitialisation (formulaire email)
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && !isset($_POST['token'])) {
+            $email = trim($_POST['email']);
+            if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $this->errors['email'] = "Veuillez saisir une adresse email valide.";
+            } else {
+                $user = Utilisateur::getByEmail($email);
+                if ($user) {
+                    $tokenGen = bin2hex(random_bytes(32));
+                    $expires = date('Y-m-d H:i:s', time() + 1800); // 30 min
+                    Utilisateur::setResetToken($email, $tokenGen, $expires);
+                    Utilisateur::sendResetEmail($email, $tokenGen);
+                }
+                $this->success['reset'] = "Si un compte existe avec cet email, un lien de réinitialisation a été envoyé.";
+            }
+            // On ne définit PAS $showResetForm ici, donc seul le formulaire d'email reste affiché
+        }
+
+        // 2. Lien de réinitialisation avec token
+        if ($token) {
+            $user = Utilisateur::getByResetToken($token);
+            if ($user && !empty($user['reset_token_expires']) && strtotime($user['reset_token_expires']) > time()) {
+                $showResetForm = true;
+                if (isset($user['email_utilisateur'])) {
+                    $email = $user['email_utilisateur'];
+                }
+            } else {
+                $this->errors['token'] = "Lien invalide ou expiré. Veuillez refaire une demande.";
+                $showResetForm = false;
+            }
+        }
+
+        // 3. Soumission du nouveau mot de passe
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['token'], $_POST['password'], $_POST['password_confirm'])) {
+            $token = $_POST['token'];
+            $user = Utilisateur::getByResetToken($token);
+            if ($user && !empty($user['reset_token_expires']) && strtotime($user['reset_token_expires']) > time()) {
+                $password = $_POST['password'];
+                $password_confirm = $_POST['password_confirm'];
+                if (empty($password) || strlen($password) < 8) {
+                    $this->errors['password'] = "Le mot de passe doit contenir au moins 8 caractères.";
+                } elseif ($password !== $password_confirm) {
+                    $this->errors['password_confirm'] = "Les mots de passe ne correspondent pas.";
+                } elseif (!$this->validatePasswordComplexity($password)) {
+                    $this->errors['password'] = "Le mot de passe doit contenir au moins 2 majuscules, 1 chiffre et 1 caractère spécial.";
+                }
+                if (empty($this->errors)) {
+                    if (isset($user['ID_Utilisateur'])) {
+                        Utilisateur::updatePassword($user['ID_Utilisateur'], $password);
+                        Utilisateur::clearResetToken($user['ID_Utilisateur']);
+                    }
+                    $this->success['reset_done'] = "Votre mot de passe a été réinitialisé avec succès.";
+                    $showResetForm = false;
+                } else {
+                    $showResetForm = true;
+                    if (isset($user['email_utilisateur'])) {
+                        $email = $user['email_utilisateur'];
+                    }
+                }
+            } else {
+                $this->errors['token'] = "Lien invalide ou expiré. Veuillez refaire une demande.";
+                $showResetForm = false;
+            }
+        }
+
+        // Inclusion du header commun
+        $pageTitle = "Mot de passe oublié - Elessard Bijouterie";
+        $metaDesc = "Réinitialisez votre mot de passe pour accéder à votre espace client.";
         include_once __DIR__ . '/../includes/header.php';
 
-        
-        if(!isset($_GET['token'])){
-            header("location:index.php?page=home ");
-            exit;
-        }
+        // Passe les tableaux à la vue
+        $errors = $this->errors;
+        $success = $this->success;
 
-        if(!$this->verifToken($_GET['token'])){
-            header("location:index.php?page=home ");
-            exit;
-        }
-        //Inclusion de la vue MDPOublie
         include_once __DIR__ . '/../views/mdpoublie.php';
-
-        //Inclusion du footer commun
         include_once __DIR__ . '/../includes/footer.php';
-        
     }
 
-    public function getErrorMessage() : array {
-        return $this->errorsMessage;
+    private function validatePasswordComplexity($password): bool {
+        $uppercaseCount = preg_match_all('/[A-Z]/', $password);
+        $digitCount = preg_match_all('/[0-9]/', $password);
+        $specialCount = preg_match_all('/[!@#$%^&*()_+\-=\[\]{};\':\"\\|,.<>\/?]/', $password);
+        return $uppercaseCount >= 2 && $digitCount >= 1 && $specialCount >= 1;
     }
 
-    public function getSuccessMessage(): array {
-        return $this->successMessage;
-    }
-
-
-    public function  verifToken(){
-        global $dbh;
-        $sql ='SELECT * FROM utilisateurs where Token_MDPOublie_Utilisateur = :token' ;
-        $req = $dbh->prepare($sql);
-        $req->bindParam(':token',$_GET['token'],PDO::PARAM_STR);
-        if($req->execute()){
-            $nb_Result = $req->rowCount();
-            if($nb_Result == 1){
-                $resultat = $req->fetch(PDO::FETCH_ASSOC);
-                $id = $resultat['id_Utilisateur'];
-                $_SESSION['id'] = $id ;
-               return true;
-            }else{
-                return false;
-            }
-        }
-    }
-
-    public function messageMDP(){
-        $newMDP = $_POST['newMDP'] ?? "";
-        $repNewMDP = $_POST['repNewMDP'] ?? "";
-
-        if(empty($newMDP) && empty($repNewMDP)){
-            $this->errorsMessage[] = "⚠ Les mots de passe sont obligatoire";
-        }
-        elseif( empty($newMDP) || empty($repNewMDP)){
-            $this->errorsMessage[] = "⚠ Veuillez entrer votre nouveau mot de passe dans les deux champs "; 
-        }
-        elseif($newMDP !== $repNewMDP){
-            $this->errorsMessage[] = "⚠ Les deux mots de passe doivent être identique";
-        }
-        else{
-            if($this->newMdp()){
-                $this->successMessage[] = "✔ Votre mot de passe a bien été enregistrer";
-            }
-            else{
-                $this->errorsMessage[] = "⚠ Erreur lors de l'enregistrement du mot de passe";
-            }
-        }
-    }
-
+    public function getErrors(): array { return $this->errors; }
+    public function getSuccess(): array { return $this->success; }
+    public function hasErrors(): bool { return !empty($this->errors); }
+    public function hasSuccess(): bool { return !empty($this->success); }
 }
-$utilisateur = new mdpController;
-
-
-$utilisateur->verifToken();
-
-$utilisateur->messageMDP();
-
-
-
-
-
-
-?>

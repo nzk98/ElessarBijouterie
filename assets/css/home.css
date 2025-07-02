@@ -10,6 +10,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 70vh;
 }
 
 .carousel-container {
@@ -20,21 +21,30 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 70vh;
 }
 
 .carousel-item {
+    position: absolute;
     width: 100vw;
+    height: 70vh;
     display: none;
     padding: 0;
     background: transparent;
     justify-content: center;
     align-items: center;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    top: 0;
+    left: 0;
 }
 
 .carousel-item.active {
     display: flex;
     align-items: center;
     justify-content: center;
+    opacity: 1;
+    z-index: 1;
 }
 
 .carousel-image {
@@ -86,6 +96,11 @@
     transform: scale(1.1);
 }
 
+.carousel-control:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
 .carousel-indicators {
     display: flex;
     gap: 0.5rem;
@@ -100,6 +115,8 @@
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
+    border: none;
+    padding: 0;
 }
 
 .carousel-indicator:hover {
@@ -110,6 +127,11 @@
 .carousel-indicator.active {
     background: white;
     transform: scale(1.2);
+}
+
+.carousel-indicator:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
 }
 
 .no-images {
@@ -148,6 +170,27 @@
 @media (max-width: 768px) {
     .posts-grid {
         grid-template-columns: 1fr;
+    }
+    .carousel-container, .carrousel-container, .carousel, .carrousel {
+        margin: 0 auto !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .carousel-item, .carrousel-item {
+        margin: 0 auto;
+        display: block;
+        max-width: 90vw;
+        width: 100%;
+        text-align: center;
+    }
+    .carousel img, .carrousel img {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        height: auto;
     }
 }
 
@@ -242,4 +285,10 @@ h2{
     background: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Styles pour les messages de debug */
+.debug-message {
+    color: red;
+    font-size: 12px;
 }

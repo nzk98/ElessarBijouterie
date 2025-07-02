@@ -1210,6 +1210,7 @@ textarea#description.form-control {
     transform: scale(1.05);
 }
 
+
 .delete-image {
     position: absolute;
     top: 10px;
@@ -1237,7 +1238,84 @@ textarea#description.form-control {
 }
 
 .delete-image i {
-    color: #e74c3c;
-    font-size: 14px;
+    font-size: 16px;
+}
+
+/* Styles pour les alertes dans le formulaire d'édition d'admin */
+.admin-main .alert {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+}
+
+.admin-main .alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.admin-main .alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+/* Styles pour la validation du mot de passe */
+.password-requirements {
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+.requirement {
+    margin: 2px 0;
+    font-size: 0.85em;
+}
+
+.password-match {
+    margin-top: 5px;
+    font-size: 0.9em;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+/* Styles pour les champs masqués par défaut */
+.password-fields {
+    display: none;
+}
+
+.password-fields.show {
+    display: block;
+}
+
+.password-requirements {
+    display: none;
+}
+
+.password-requirements.show {
+    display: block;
+}
+
+.current-password-error {
+    display: none;
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.current-password-error.show {
+    display: block;
+}
+
+/* Styles pour les images dans les tableaux admin */
+.admin-table-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
 }
 

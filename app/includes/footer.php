@@ -6,20 +6,25 @@
             </div>
             <div class="footer-section">
                 <h3>Contact</h3>
-                <p>Email: contact@elessar-bijouterie.fr</p>
+                <p>Email: <a href="mailto:contact@elessar-bijouterie.fr">contact@elessar-bijouterie.fr</a></p>
             </div>
             <div class="footer-section">
                 <h3>Suivez-nous</h3>
                 <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/elessar_bijouterie/"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 Elessar Bijouterie. Tous droits réservés.</p>
+            <p>&copy; 2024 Elessar Bijouterie. Tous droits réservés. | <a href="index.php?page=MentionsLegales">Mentions légales</a> | <a href="index.php?page=CGV">CGV</a></p>
         </div>
     </footer>
+
+    <div id="cookie-consent-popin" class="cookie-consent-popin">
+        <p>Pour garder votre panier entre vos visites, nous pouvons utiliser un cookie. Acceptez-vous le cookie panier&nbsp;?</p>
+        <button id="accept-cart-cookie" class="accept-cart-cookie">Accepter</button>
+        <button id="refuse-cart-cookie">Refuser</button>
+    </div>
 
     <!-- Scripts JavaScript -->
     <script src="assets/js/main.js?v=<?= filemtime('assets/js/main.js') ?>"></script>

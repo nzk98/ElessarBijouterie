@@ -1,5 +1,7 @@
 <?php
-
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 class BlogController {
 	public function index() {
@@ -34,6 +36,8 @@ class BlogController {
 		$articles = Article::getFilteredArticles($selectedCategories, $selectedYears, $sort);
 
 		// Inclusion du header commun
+		$pageTitle = "Blog - Conseils et actualités de la bijouterie artisanale";
+		$metaDesc = "Découvrez mes articles de blog sur l'univers de la bijouterie, mes conseils, inspirations et actualités Elessard.";
 		include_once __DIR__ . '/../includes/header.php';
 
 		// Inclusion de la vue principale

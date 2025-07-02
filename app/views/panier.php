@@ -18,13 +18,14 @@
                             </div>
                             <div class="item-details">
                                 <h3 class="item-title"><?php echo htmlspecialchars($item['nom']); ?></h3>
+                                <p class="item-stock">Stock disponible : <?php echo $item['stock']; ?></p>
                                 <div class="item-quantity">
-                                    <form method="POST" action="index.php?page=Panier" style="display:inline-flex;align-items:center;">
+                                    <form method="POST" action="index.php?page=Panier" class="quantity-form">
                                         <input type="hidden" name="update_quantity" value="1">
                                         <input type="hidden" name="id" value="<?php echo $item['id']; ?>">
-                                        <button class="quantity-btn minus" type="submit" name="quantite" value="<?php echo max(1, $item['quantite']-1); ?>">-</button>
+                                        <button class="quantity-btn minus" type="submit" name="quantite" value="<?php echo $item['quantite'] - 1; ?>">-</button>
                                         <span class="item-quantity-value"><?php echo $item['quantite']; ?></span>
-                                        <button class="quantity-btn plus" type="submit" name="quantite" value="<?php echo $item['quantite']+1; ?>">+</button>
+                                        <button class="quantity-btn plus" type="submit" name="quantite" value="<?php echo $item['quantite'] + 1; ?>" <?php echo ($item['quantite'] >= $item['stock']) ? 'disabled' : ''; ?>>+</button>
                                     </form>
                                 </div>
                             </div>

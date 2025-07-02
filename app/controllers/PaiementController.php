@@ -4,7 +4,6 @@
 class PaiementController {
 	public function index() {
 		$pageStyle = "paiement.css";
-		// $jsFile = ["cart-counter.js","paiement.js"];
 		$jsFile = ["paiement.js"];
 
 		// Traitement du paiement (simulation ici)

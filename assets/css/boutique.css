@@ -188,6 +188,27 @@
     box-shadow: 0 8px 30px rgba(0,0,0,0.2);
 }
 
+.product-card.out-of-stock {
+    opacity: 0.6;
+}
+
+.product-card.out-of-stock:hover {
+    transform: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.product-card.out-of-stock .product-image img {
+    filter: grayscale(100%);
+}
+
+.product-card.out-of-stock .product-overlay {
+    pointer-events: none;
+}
+
+.product-card.out-of-stock .btn-view {
+    pointer-events: all;
+}
+
 .product-image {
     position: relative;
     padding-top: 100%;

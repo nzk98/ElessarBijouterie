@@ -1,5 +1,7 @@
 <?php
-
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 class HomeController {
 	public function index() {
@@ -15,6 +17,8 @@ class HomeController {
 		$carouselImages = ImageCreation::getCarouselImages();
 
 		// Inclusion du header commun
+		$pageTitle = "Accueil - Elessard Bijouterie, créations artisanales";
+		$metaDesc = "Bienvenue sur  Elessard Bijouterie : créations artisanales, bagues, colliers et bijoux uniques faits main par mes soins.";
 		include_once __DIR__ . '/../includes/header.php';
 		
 		// Inclusion de la vue principale

@@ -1,30 +1,30 @@
 <main class="contact-container">
+    <h1>Contactez-moi</h1>
+    <div class="contact-content-row">
         <section class="contact-info-section">
-            <h2>Contactez-nous</h2>
+            <h2>Contact</h2>
             <div class="contact-methods">
                 <div class="contact-method">
                     <i class="fas fa-envelope"></i>
                     <h3>Email</h3>
-                    <p>contact@elessar-bijouterie.fr</p>
+                    <p><a href="mailto:contact@elessar-bijouterie.fr">contact@elessar-bijouterie.fr</a></p>
                 </div>
                 <div class="contact-method">
-                    <i class="fas fa-clock"></i>
-                    <h3>Horaires</h3>
-                    <p>Lundi - Vendredi : 9h - 18h</p>
-                    <p>Samedi : 10h - 16h</p>
-                </div>
-                <div class="contact-method">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <h3>Adresse</h3>
-                    <p>123 Rue de la Bijouterie</p>
-                    <p>75000 Paris, France</p>
+                    <h3>Réseaux Sociaux</h3>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/elessar_bijouterie/" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section class="contact-form-section">
             <h2>Envoyez-nous un message</h2>
-            <form id="contact-form" class="contact-form">
+            
+            <!-- Message de réponse -->
+            <div id="contact-response" class="contact-response"></div>
+            
+            <form id="contact-form" class="contact-form" action="contact/sendMessage" method="POST">
                 <div class="form-group">
                     <label for="nom">Nom</label>
                     <input type="text" id="nom" name="nom" placeholder="Nom..." required>
@@ -55,7 +55,8 @@
                     <label for="message">Message</label>
                     <textarea id="message" name="message" required></textarea>
                 </div>
-                <button type="submit" class="btn-primary">Envoyer le message</button>
+                <button type="submit" class="btn-primary" id="submit-btn">Envoyer le message</button>
             </form>
         </section>
-    </main>
+    </div>
+</main>

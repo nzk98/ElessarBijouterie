@@ -1,6 +1,6 @@
 <?php
 
-require_once('Database.php');
+require_once __DIR__ . '/Database.php';
 
 class Creation {
     private ?int $id;
@@ -54,7 +54,9 @@ class Creation {
         $db = Database::getInstance();
         try {
             // Insertion dans la table creation (sans ID_Matiere)
-            $stmt = $db->prepare("INSERT INTO creation (Nom_Creation, Description_Creation, Stock_Creation, Prix_Creation, ID_Categorie) VALUES (?, ?, ?, ?, ?)");
+            $stmt = $db->prepare("INSERT INTO creation 
+            (Nom_Creation, Description_Creation, Stock_Creation, Prix_Creation, ID_Categorie)
+             VALUES (?, ?, ?, ?, ?)");
             $stmt->execute([
                 $this->nom,
                 $this->description,
@@ -294,12 +296,13 @@ class Creation {
         return $this->id_categorie;
     }
 
-    public static function getFilteredCreations($categories = [], $sort = 'id-desc'): array {
+    public static function getFilteredCreations($categories = [], $matieres = [], $sort = 'id-desc'): array {
         $db = Database::getInstance();
         try {
             $query = "SELECT creation.*, GROUP_CONCAT(image_creation.URL_Image) as images 
                      FROM creation 
-                     LEFT JOIN image_creation ON creation.ID_Creation = image_creation.ID_Creation";
+                     LEFT JOIN image_creation ON creation.ID_Creation = image_creation.ID_Creation
+                     LEFT JOIN renfermer_creationmatiere rcm ON creation.ID_Creation = rcm.ID_Creation";
 
             $params = [];
             $conditions = [];
@@ -308,6 +311,12 @@ class Creation {
                 $placeholders = str_repeat('?,', count($categories) - 1) . '?';
                 $conditions[] = "creation.ID_Categorie IN ($placeholders)";
                 $params = array_merge($params, $categories);
+            }
+
+            if (!empty($matieres)) {
+                $placeholders = str_repeat('?,', count($matieres) - 1) . '?';
+                $conditions[] = "rcm.ID_Matiere IN ($placeholders)";
+                $params = array_merge($params, $matieres);
             }
 
             if (!empty($conditions)) {

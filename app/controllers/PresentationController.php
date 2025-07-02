@@ -3,8 +3,6 @@
 class PresentationController {
 	public function index() {
 		$pageStyle = "presentation.css";
-		// $jsFile = ["cart-counter.js","presentation.js"];
-		$jsFile = ["presentation.js"];
 
 		// Inclusion du header commun
 		include_once __DIR__ . '/../includes/header.php';

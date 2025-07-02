@@ -1,5 +1,9 @@
+
 <main class="blog-container">
-    <h2 class="blog-title">Blog</h2>
+
+
+
+    <h1 class="blog-title">Blog</h1>
     
     <div class="blog-content">
         <!-- Filtres -->

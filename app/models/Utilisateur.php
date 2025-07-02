@@ -1,8 +1,12 @@
 <?php
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require_once('Database.php');
+if (session_status() === PHP_SESSION_NONE) {
+	session_start();
+}
+require_once __DIR__ . '/Database.php';
 require('Fonction.php');
 
 class Utilisateur {
@@ -235,75 +239,9 @@ class Utilisateur {
 		}
 	}
 
-	public function MDPOublie(){
-		global $dbh;
-		
-			if(!empty($_POST['email'])){
-				$sql ="SELECT Email_utilisateur FROM utilisateurs where :email = Email_utilisateur";
-				$req = $dbh->prepare($sql);
-				$req->bindParam(':email',$_POST['email'],PDO::PARAM_STR);
-				if($req->execute()){
-					$result_mail = $req->fetch(PDO::FETCH_ASSOC);
-					$token = genererToken();
+	
 
-					 //Create an instance; passing `true` enables exceptions
-					 $mail = new PHPMailer(true);
 
-					 try {
-					 //Server settings
-					 $mail->isSMTP();                                            //Send using SMTP
-					 $mail->Host       ='dwwm2425.fr';                     //Set the SMTP server to send through
-					 $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-					 $mail->Username   = 'contact@dwwm2425.fr';                     //SMTP username
-					 $mail->Password   = '!cci18000Bourges!';                               //SMTP password
-					 $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-					 $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-	 
-					 //Recipients
-					 $mail->setFrom('no-reply@dww2425.fr', 'Formulaire contact from - monSite');
-					 $mail->addAddress($result_mail['Email_utilisateur'],'nicolas','zinck');     //Add a recipient
-		 
-					 //Content
-					 $mail->isHTML(true);                                  //Set email format to HTML
-					 $mail->Subject = "Réccupérer votre Mot de Passe CCI-Formation 18 ";
-					 $mail->Body    = "Bonjour voici le lien pour changer votre Mot de Passe <br> Votre lien : http://projet/CCI-Back/index.php?page=mdpoublie&token={$token}";
-					 $mail->AltBody = "Bonjour voici le lien pour changer votre Mot de Passe<br> Votre lien :  http://projet/CCI-Back/index.php?page=mdpoublie&token={$token}";
-					if($mail->send()){
-
-					
-					 $sql = 'UPDATE Utilisateurs SET Token_MDPOublie_Utilisateur = :token WHERE Email_Utilisateur = :email';
-					 $req =  $dbh->prepare($sql);
-					 $req->bindValue(':token', $token,PDO::PARAM_STR);
-					 $req->bindParam(':email',$result_mail['Email_utilisateur'],PDO::PARAM_STR);
-					 if($req->execute()){
-						
-					 }
-					}
-					 else {
-					 }
-
-					 } catch (Exception $e) {
-					 }
-
-				}	
-				
-			}
-	}
-
-	public function newMdp(){
-			
-		global $dbh;
-		$newMDP = $_POST['newMDP'];
-		$this->setMotDePasse($newMDP);
-
-		$sql ="UPDATE utilisateurs set PassWord_Utilisateur = :newMDP where id_Utilisateur = :id";
-		$req = $dbh->prepare($sql);
-		$req->bindParam(':id', $_SESSION['id'], PDO::PARAM_STR);
-		$req->bindValue(':newMDP', $this->mot_de_passe, PDO::PARAM_STR);
-		if($req->execute()){
-			return true;
-		}		
-	}			
 
 	// MÉTHODE POUR RÉCUPÉRER LES DONNÉES D'UN UTILISATEUR PAR SON ID
 	public static function getUtilisateurById(int $id): ?Utilisateur {
@@ -390,6 +328,102 @@ class Utilisateur {
 		$db = Database::getInstance();
 		$stmt = $db->query("SELECT COUNT(*) FROM utilisateurs");
 		return (int)$stmt->fetchColumn();
+	}
+
+	// --- RESET MOT DE PASSE PAR TOKEN ---
+	public static function getByEmail($email) {
+		try {
+			$db = Database::getInstance();
+			$stmt = $db->prepare("SELECT * FROM utilisateurs WHERE Email_Utilisateur = :email");
+			$stmt->execute([':email' => $email]);
+			return $stmt->fetch(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			return null;
+		}
+	}
+
+	public static function setResetToken($email, $token, $expires) {
+		try {
+			$db = Database::getInstance();
+			$stmt = $db->prepare("UPDATE utilisateurs SET reset_token = :token, reset_token_expires = :expires WHERE Email_Utilisateur = :email");
+			return $stmt->execute([
+				':token' => $token,
+				':expires' => $expires,
+				':email' => $email
+			]);
+		} catch (PDOException $e) {
+			return false;
+		}
+	}
+
+	public static function getByResetToken($token) {
+		try {
+			$db = Database::getInstance();
+			$stmt = $db->prepare("SELECT * FROM utilisateurs WHERE reset_token = :token");
+			$stmt->execute([':token' => $token]);
+			return $stmt->fetch(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			return null;
+		}
+	}
+
+	public static function updatePassword($id, $password) {
+		try {
+			$db = Database::getInstance();
+			$hash = password_hash($password, PASSWORD_DEFAULT);
+			$stmt = $db->prepare("UPDATE utilisateurs SET MotdePasse_Utilisateur = :mdp WHERE ID_Utilisateur = :id");
+			return $stmt->execute([
+				':mdp' => $hash,
+				':id' => $id
+			]);
+		} catch (PDOException $e) {
+			return false;
+		}
+	}
+
+	public static function clearResetToken($id) {
+		try {
+			$db = Database::getInstance();
+			$stmt = $db->prepare("UPDATE utilisateurs SET reset_token = NULL, reset_token_expires = NULL WHERE ID_Utilisateur = :id");
+			return $stmt->execute([':id' => $id]);
+		} catch (PDOException $e) {
+			return false;
+		}
+	}
+
+	public static function sendResetEmail($email, $token) {
+		
+
+		$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+		try {
+			$mail->isSMTP();
+			$mail->Host = 'dwwm2425.fr'; // À adapter
+			$mail->SMTPAuth = true;
+			$mail->Username = 'contact@dwwm2425.fr';   // À adapter
+			$mail->Password = '!cci18000Bourges!';   // À adapter
+			$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+			$mail->Port = 465;
+
+			$mail->setFrom('contact@dwwm2425.fr', 'Elessard Bijouterie');
+			$mail->addAddress($email);
+
+			$mail->isHTML(true);
+			$mail->Subject = "Réinitialisation de votre mot de passe";
+			$resetLink = "http://projet/ElessardBijouterieTest/ElessardBijouterie/index.php?page=Mdpoublie&token=$token";
+			$mail->Body = "Bonjour,<br><br>
+				Vous avez demandé la réinitialisation de votre mot de passe.<br>
+				Cliquez sur ce lien pour le réinitialiser (valable 30 minutes) :<br>
+				<a href=\"$resetLink\">$resetLink</a><br><br>
+				Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.<br><br>
+				Elessard Bijouterie";
+			$mail->AltBody = "Lien de réinitialisation : $resetLink";
+
+			$mail->send();
+			return true;
+		} catch (\PHPMailer\PHPMailer\Exception $e) {
+			error_log('Erreur PHPMailer : ' . $mail->ErrorInfo);
+			return false;
+		}
 	}
 }
 

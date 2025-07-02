@@ -1,8 +1,13 @@
 <?php
 $categories = isset($categories) ? $categories : [];
+
+// Trie les catégories par ID décroissant
+usort($categories, function($a, $b) {
+    return $b->getId() - $a->getId();
+});
 ?>
 <main class="products-container">
-    <h2 class="products-main-title">Boutique</h2>
+    <h1 class="products-main-title">Boutique</h1>
     
     <!-- Filtres -->
     <aside class="filters-sidebar">
@@ -10,7 +15,7 @@ $categories = isset($categories) ? $categories : [];
         <form action="index.php" method="GET">
             <input type="hidden" name="page" value="Boutique">
             <div class="filter-section">
-                <h3>Collections</h3>
+                <h3>Catégories</h3>
                 <div class="filter-options">
                     <?php foreach ($categories as $categorie): ?>
                     <label class="filter-option">
@@ -18,6 +23,20 @@ $categories = isset($categories) ? $categories : [];
                                value="<?php echo htmlspecialchars($categorie->getId()); ?>"
                                <?php echo in_array($categorie->getId(), $selectedCategories) ? 'checked' : ''; ?>>
                         <?php echo htmlspecialchars($categorie->getNom()); ?>
+                    </label>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>Matières</h3>
+                <div class="filter-options">
+                    <?php foreach ($matieres as $matiere): ?>
+                    <label class="filter-option">
+                        <input type="checkbox" name="matieres[]"
+                               value="<?php echo htmlspecialchars($matiere->id); ?>"
+                               <?php echo (isset($selectedMatieres) && in_array($matiere->id, $selectedMatieres)) ? 'checked' : ''; ?>>
+                        <?php echo htmlspecialchars($matiere->nom); ?>
                     </label>
                     <?php endforeach; ?>
                 </div>
@@ -54,7 +73,7 @@ $categories = isset($categories) ? $categories : [];
 
         <div class="products-list" id="products-list">
             <?php foreach ($creations as $creation): ?>
-                <article class="product-card">
+                <article class="product-card <?php echo $creation->getStock() <= 0 ? 'out-of-stock' : ''; ?>">
                     <div class="product-image">
                         <img src="<?php echo !empty($creation->getImages()) ? $creation->getImages()[0] : 'assets/images/default-product.jpg'; ?>" 
                              alt="<?php echo htmlspecialchars($creation->getNom()); ?>">
@@ -66,88 +85,24 @@ $categories = isset($categories) ? $categories : [];
                                 <input type="hidden" name="add_to_cart" value="1">
                                 <input type="hidden" name="id" value="<?php echo $creation->getId(); ?>">
                                 <input type="hidden" name="nom" value="<?php echo htmlspecialchars($creation->getNom()); ?>">
-                                <input type="hidden" name="prix" value="<?php echo $creation->getPrix(); ?>">
+                                <input type="hidden" name="prix" value="<?php echo number_format($creation->getPrix(), 2, '.', ''); ?>">
                                 <input type="hidden" name="image" value="<?php echo !empty($creation->getImages()) ? $creation->getImages()[0] : 'assets/images/default-product.jpg'; ?>">
                                 <input type="hidden" name="quantite" value="1">
-                                <button type="submit" class="btn-add-cart">Ajouter au panier</button>
+                                <?php if ($creation->getStock() > 0): ?>
+                                    <button type="submit" class="btn-add-cart">Ajouter au panier</button>
+                                <?php else: ?>
+                                    <button type="button" class="btn-add-cart" disabled>Rupture de stock</button>
+                                <?php endif; ?>
                             </form>
                         </div>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title"><?php echo htmlspecialchars($creation->getNom()); ?></h3>
-                        <p class="product-price"><?php echo number_format($creation->getPrix(), 2); ?> €</p>
-                        <p class="product-status">
-                            <?php echo $creation->getStock() > 0 ? 'En stock' : 'Rupture de stock'; ?>
-                        </p>
+                        <p class="product-price"><?php echo number_format($creation->getPrix(), 2, ',', ' '); ?> €</p>
                     </div>
                 </article>
             <?php endforeach; ?>
         </div>
     </section>
 </main>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const filterForm = document.getElementById('filter-form');
-    const sortSelect = document.getElementById('sort');
-    const productsList = document.getElementById('products-list');
-    const products = document.querySelectorAll('.product-card');
-
-    function filterProducts() {
-        const selectedCategories = Array.from(document.querySelectorAll('input[name="collection"]:checked')).map(input => input.value);
-        const sortValue = sortSelect.value;
-
-        let filteredProducts = Array.from(products);
-
-        // Appliquer les filtres
-        if (selectedCategories.length > 0) {
-            filteredProducts = filteredProducts.filter(product => 
-                selectedCategories.includes(product.dataset.category)
-            );
-        }
-
-        // Trier les produits
-        filteredProducts.sort((a, b) => {
-            switch(sortValue) {
-                case 'price-asc':
-                    return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
-                case 'price-desc':
-                    return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
-                case 'id-desc':
-                default:
-                    return parseInt(b.dataset.id) - parseInt(a.dataset.id);
-            }
-        });
-
-        // Masquer tous les produits
-        products.forEach(product => product.style.display = 'none');
-
-        // Afficher les produits filtrés
-        filteredProducts.forEach(product => product.style.display = '');
-
-        // Afficher un message si aucun produit
-        if (filteredProducts.length === 0) {
-            if (!document.querySelector('.no-products')) {
-                const noProducts = document.createElement('p');
-                noProducts.className = 'no-products';
-                noProducts.textContent = 'Aucun produit ne correspond à vos critères';
-                productsList.appendChild(noProducts);
-            }
-        } else {
-            const noProducts = document.querySelector('.no-products');
-            if (noProducts) {
-                noProducts.remove();
-            }
-        }
-    }
-
-    // Écouter les changements des filtres
-    document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', filterProducts);
-    });
-
-    // Écouter les changements de tri
-    sortSelect.addEventListener('change', filterProducts);
-});
-</script>
 

@@ -98,6 +98,18 @@
     border-color: var(--color-accent);
 }
 
+.quantity-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.quantity-btn:disabled:hover {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
 .item-quantity input {
     width: 60px;
     text-align: center;
@@ -250,6 +262,12 @@
     color: var(--color-white);
 }
 
+.item-stock {
+    color: #cccccc;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
 @media (max-width: 1200px) {
     .cart-content {
         grid-template-columns: 1fr;
@@ -288,4 +306,10 @@
     .cart-summary h3 {
         font-size: 1.8rem;
     }
+}
+
+/* Styles pour le formulaire de quantité */
+.quantity-form {
+    display: inline-flex;
+    align-items: center;
 } 

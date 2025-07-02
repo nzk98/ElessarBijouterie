@@ -13,7 +13,8 @@ if (isset($_SESSION['panier'])) {
     }
 }
 
-
+// Déterminer la page actuelle pour le style de la navigation
+$currentPage = isset($_GET['page']) ? $_GET['page'] : 'Accueil';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -23,6 +24,14 @@ if (isset($_SESSION['panier'])) {
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<meta name="description" content="<?php echo isset($metaDesc) ? strip_tags($metaDesc) : "Bienvenue sur mon site de bijouterie"; ?>">
 	<title><?php echo isset($pageTitle) ? strip_tags($pageTitle) : "ElessarBijouterie - Page d'accueil"; ?></title>
+	<!-- Favicons pour tous les appareils et navigateurs -->
+	<link rel="icon" type="image/x-icon" href="assets/images/favicon_io/favicon.ico">
+	<link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon_io/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon_io/favicon-16x16.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon_io/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="192x192" href="assets/images/favicon_io/android-chrome-192x192.png">
+	<link rel="icon" type="image/png" sizes="512x512" href="assets/images/favicon_io/android-chrome-512x512.png">
+	<link rel="manifest" href="assets/images/favicon_io/site.webmanifest">
 	<!-- Lien CSS -->
 	<link rel="stylesheet" href="assets/css/style.css">
 	<!-- Lien Font Awesome -->
@@ -35,6 +44,9 @@ if (isset($_SESSION['panier'])) {
 			}
 		}
 	?>
+	<script>
+        const BASE_URL = "<?php echo rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'); ?>/";
+    </script>
 </head>
 <body>
     <!-- En-tête du site -->
@@ -42,7 +54,7 @@ if (isset($_SESSION['panier'])) {
         <nav class="main-nav">
             <div class="logo">
                 <img src="assets/images/logo.jpg" class="logo-img" alt="Logo Elessar Bijouterie">
-                <h1>Elessar Bijouterie</h1>
+                <p class="site-title">Elessar Bijouterie</p>
             </div>
             <div class="burger-menu">
                 <span></span>
@@ -56,7 +68,7 @@ if (isset($_SESSION['panier'])) {
                 <li><a href="index.php?page=Blog">Blog</a></li>
                 <li><a href="index.php?page=Contact">Contact</a></li>
                 <?php if (isset($_SESSION['user'])): ?>
-                    <li><a href="index.php?page=Dashboard">Mon Dashboard </a></li>
+                    <li><a href="index.php?page=Dashboard">Mon Dashboard</a></li>
                     <li><a href="index.php?page=Deconnexion">Déconnexion</a></li>
                 <?php else: ?>
                     <li><a href="index.php?page=Connexion">Connexion</a></li>

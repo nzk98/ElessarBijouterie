@@ -20,4 +20,16 @@ document.addEventListener('DOMContentLoaded', function() {
             quantiteInput.value = quantite;
         });
     }
+
+    // Gestion des miniatures d'images
+    const thumbnails = document.querySelectorAll('.thumbnail-img');
+    const mainImage = document.getElementById('product-image');
+
+    if (thumbnails.length > 0 && mainImage) {
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function() {
+                mainImage.src = this.src;
+            });
+        });
+    }
 });

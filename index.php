@@ -1,10 +1,14 @@
 <?php
+// Démarrage de session pour toute l'application
+session_start();
 
 // Test de la connexion à la base de données
 require_once __DIR__ . '/app/models/Database.php';
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 spl_autoload_register(function ($class) {
-    $paths = ["app/controllers", "app/models"];
+    $paths = ["app/controllers", "app/models","app/controllers/admin", "app/models/admin", "Doc"];
     foreach ($paths as $path) {
         $file = __DIR__. "/" .$path. "/" .$class. ".php";
         if(file_exists($file)){
@@ -29,7 +33,11 @@ switch($page){
             
     case 'Contact':
         $controller = new ContactController();
-        $controller -> index();
+        if (isset($_GET['action']) && $_GET['action'] === 'processForm') {
+            $controller->processForm();
+        } else {
+            $controller->index();
+        }
         break;
                 
     case "Boutique":
@@ -57,10 +65,6 @@ switch($page){
         $controller -> index();
         break;
                             
-    case "Inscription":
-        $controller = new InscriptionController();
-        $controller -> index();
-        break;
 
     case "Mdpoublie":
         $controller = new MdpoublieController();
@@ -78,7 +82,7 @@ switch($page){
         break;
 
     case "Historique":
-        $controller = new HistoriqueController();
+        $controller = new HistoriqueCommandesController();
         $controller -> index();
         break;
 
@@ -98,24 +102,28 @@ switch($page){
         break;
 
     case "AdminLog":
+        require_once __DIR__ . '/app/controllers/admin/AdminLogController.php';
         $controller = new AdminLogController();
-        $controller -> index();
+        $controller->index();
         break;
 
     case "AdminFormCreation":
+        require_once __DIR__ . '/app/controllers/admin/AdminFormCreationController.php';
         $controller = new AdminFormCreationController();
-        $controller -> index();
+        $controller->index();
         break;
     
     case "AdminFormArticle":
+        require_once __DIR__ . '/app/controllers/admin/AdminFormArticle.php';
         $controller = new AdminFormArticle();
         $controller->index();
         break;
         
     case "admin":
-    	$controller = new AdminController();
-		$controller->index(); // Accès autorisé au dashboard
-		break;
+        require_once __DIR__ . '/app/controllers/admin/AdminController.php';
+        $controller = new AdminController();
+        $controller->index();
+        break;
 
     case "Deconnexion":
         $controller = new DeconnexionController();
@@ -123,11 +131,13 @@ switch($page){
         break;
 
     case "AdminRegister-espace-2547":
+        require_once __DIR__ . '/app/controllers/admin/AdminRegisterController.php';
         $controller = new AdminRegisterController();
         $controller->index();
         break;
 
     case "AdminCarousel":
+        require_once __DIR__ . '/app/controllers/admin/AdminCarouselController.php';
         $controller = new AdminCarouselController();
         if (isset($_GET['action']) && $_GET['action'] === 'toggleCarousel') {
             $controller->toggleCarousel();
@@ -137,35 +147,51 @@ switch($page){
         break;
         
     case "AdminManage":
+        require_once __DIR__ . '/app/controllers/admin/AdminManageController.php';
         $controller = new AdminManageController();
         $controller->index();
         break;
 
     case "AdminUsers":
+        require_once __DIR__ . '/app/controllers/admin/AdminUsersController.php';
         $controller = new AdminUsersController();
         $controller->index();
         break;
 
     case "AdminCreations":
+        require_once __DIR__ . '/app/controllers/admin/AdminCreationsController.php';
         $controller = new AdminCreationsController();
         $controller->index();
         break;
         
     case "AdminArticles":
+        require_once __DIR__ . '/app/controllers/admin/AdminArticlesController.php';
         $controller = new AdminArticlesController();
         $controller->index();
         break;
         
     case "AdminCategories":
+        require_once __DIR__ . '/app/controllers/admin/AdminCategoriesController.php';
         $controller = new AdminCategoriesController();
         $controller->index();
         break;
 
     case 'AdminMatieres':
+        require_once __DIR__ . '/app/controllers/admin/AdminMatieresController.php';
         $controller = new AdminMatieresController();
         $controller->index();
         break;
-        
+
+    case "MentionsLegales":
+        $controller = new MentionsLegalesController();
+        $controller->index();
+        break;
+
+    case "CGV":
+        $controller = new CGVController();
+        $controller->index();
+        break;
+
     default:
         $controller = new HomeController();
         $controller -> index();

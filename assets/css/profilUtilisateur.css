@@ -141,3 +141,47 @@
         min-height: 50px;
     }
 }
+
+@media (max-width: 320px) {
+  /* Cible le conteneur du formulaire */
+  .profil-form, form, .main-content, .profil-container {
+    max-width: 92vw !important;   /* Le formulaire ne fait que 92% de la largeur écran */
+    width: 92vw !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    border-radius: 12px !important;
+  }
+  /* Tous les champs à l'intérieur */
+  .profil-form input,
+  .profil-form select,
+  .profil-form textarea,
+  .profil-form button,
+  form input,
+  form select,
+  form textarea,
+  form button {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* Styles pour la validation du mot de passe */
+.password-requirements {
+    margin-top: 10px;
+    font-size: 0.9em;
+    display: none;
+}
+
+.password-requirements.show {
+    display: block;
+}
+
+.requirement {
+    margin: 2px 0;
+    font-size: 0.85em;
+}
+

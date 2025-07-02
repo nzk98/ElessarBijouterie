@@ -5,36 +5,48 @@
         <div id="main-carousel" class="carousel-container">
             <?php 
             $totalImages = count($carouselImages);
+            // Debug: afficher le nombre d'images
+            if (isset($_GET['debug'])) {
+                echo "<!-- Debug: Nombre d'images du carrousel: $totalImages -->";
+                echo "<!-- Debug: Images: " . print_r($carouselImages, true) . " -->";
+            }
+            
             if ($totalImages > 0):
                 $currentImage = isset($_GET['slide']) ? (int)$_GET['slide'] : 0;
                 $currentImage = max(0, min($currentImage, $totalImages - 1));
-                $prevSlide = ($currentImage - 1 + $totalImages) % $totalImages;
-                $nextSlide = ($currentImage + 1) % $totalImages;
             ?>
-                <div class="carousel-item active">
-                    <img src="<?php echo htmlspecialchars($carouselImages[$currentImage]->getUrlImage()); ?>" 
-                         alt="Image de bijou" 
-                         class="carousel-image">
-                </div>
+                <!-- Toutes les images du carrousel -->
+                <?php foreach ($carouselImages as $index => $image): ?>
+                    <div class="carousel-item <?php echo $index === $currentImage ? 'active' : ''; ?>" 
+                         data-slide="<?php echo $index; ?>">
+                        <img src="<?php echo htmlspecialchars($image->getUrlImage()); ?>" 
+                             alt="Image de bijou" 
+                             class="carousel-image">
+                    </div>
+                <?php endforeach; ?>
+                
                 <div class="carousel-navigation">
-                    <a href="?page=Accueil&slide=<?php echo $prevSlide; ?>" class="carousel-control prev" aria-label="Image précédente">
+                    <button class="carousel-control prev" aria-label="Image précédente" data-direction="prev">
                         <i class="fas fa-chevron-left"></i>
-                    </a>
+                    </button>
                     <div class="carousel-indicators">
                         <?php for ($i = 0; $i < $totalImages; $i++): ?>
-                            <a href="?page=Accueil&slide=<?php echo $i; ?>" 
-                               class="carousel-indicator <?php echo $i === $currentImage ? 'active' : ''; ?>"
-                               aria-label="Aller à l'image <?php echo $i + 1; ?>">
-                            </a>
+                            <button class="carousel-indicator <?php echo $i === $currentImage ? 'active' : ''; ?>"
+                                    data-slide="<?php echo $i; ?>"
+                                    aria-label="Aller à l'image <?php echo $i + 1; ?>">
+                            </button>
                         <?php endfor; ?>
                     </div>
-                    <a href="?page=Accueil&slide=<?php echo $nextSlide; ?>" class="carousel-control next" aria-label="Image suivante">
+                    <button class="carousel-control next" aria-label="Image suivante" data-direction="next">
                         <i class="fas fa-chevron-right"></i>
-                    </a>
+                    </button>
                 </div>
             <?php else: ?>
-                <div class="carousel-item">
+                <div class="carousel-item active">
                     <p class="no-images">Aucune image disponible dans le carrousel</p>
+                    <?php if (isset($_GET['debug'])): ?>
+                        <p class="debug-message">Debug: Aucune image trouvée dans la base de données</p>
+                    <?php endif; ?>
                 </div>
             <?php endif; ?>
         </div>
