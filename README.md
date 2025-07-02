@@ -2,7 +2,7 @@
 
 ## Description
 
-ElessardBijouterie est une application web de gestion et de présentation pour une bijouterie. Elle permet la gestion des articles, des créations, des commandes, des utilisateurs, ainsi qu'une interface d'administration complète.
+ElessardBijouterie est une application web de gestion et de vente pour une bijouterie. Elle permet la gestion des articles, des créations, des commandes, des utilisateurs, ainsi qu'une interface d'administration complète.
 
 ## Fonctionnalités
 
@@ -40,11 +40,9 @@ ElessardBijouterie est une application web de gestion et de présentation pour u
      $username = "root";
      $password = "";
      ```
-   - Modifie ces valeurs selon ta configuration locale.
 
 4. **Importer la base de données**
-   - Un fichier de documentation SQL se trouve dans `Doc/SQL.docx`.
-   - Crée la base de données `elessardbijouterie` et importe les tables selon ce document.
+   - Crée la base de données `elessardbijouterie` et importe les tables
 
 5. **Lancer le serveur local**
    - Utilise XAMPP, WAMP, MAMP ou le serveur PHP intégré :
